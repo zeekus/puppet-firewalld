@@ -1,0 +1,37 @@
+ ---
+ 
+#YAML 2 Zone example
+#zones: monitoring and public
+
+firewalld::ensure: present
+firewalld::services:
+  http:
+    ensure: present
+    service: http
+    zone: public
+  nrpe:
+    ensure: present
+    service: nrpe
+    zone: monitoring
+  ssh_public: 
+    ensure: present
+    service: ssh
+    zone: public
+  ssh_monitoring: 
+    ensure: present
+    service: ssh
+    zone: monitoring
+firewalld::zones:
+  public:
+    target: '%%REJECT%%'
+    ensure: present
+    purge_ports: true
+    interfaces: eth0
+    purge_rich_rules: true
+    purge_services: true
+    icmp_blocks: router-advertisement
+  monitoring: 
+    target: default 
+    interfaces: eth0
+    sources: 10.128.0.13/32
+    icmp_blocks: echo-reply
